@@ -1,18 +1,37 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import { Head } from '@inertiajs/vue3';
+import TableHeaderCell from "@/Components/TableHeaderCell.vue";
+import TableDataCell from "@/Components/TableDataCell.vue";
+import Table from "@/Components/Table.vue";
+import TableRow from "@/Components/TableRow.vue";
+defineProps(['roles'])
 </script>
 
 <template>
     <Head title="Dashboard" />
 
     <AdminLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Dashboard</h2>
-        </template>
-
-        <div class="py-4">
-            <h1> Roles index page</h1>
+        <div class="max-w-7xl mx-auto py-4">
+            <h1>Roles Index Page</h1>
+        </div>
+        <div class="mt-6">
+            <Table>
+                <template #header>
+                    <TableRow>
+                        <TableHeaderCell>Id</TableHeaderCell>
+                        <TableHeaderCell>Name</TableHeaderCell>
+                        <TableHeaderCell>Action</TableHeaderCell>
+                    </TableRow>
+                </template>
+                <template #default>
+                    <TableRow v-for="role in roles" :key="role.id">
+                        <TableDataCell>{{role.id}}</TableDataCell>
+                        <TableDataCell>{{role.name}}</TableDataCell>
+                        <TableDataCell>Edit / Delete</TableDataCell>
+                    </TableRow>
+                </template>
+            </Table>
         </div>
     </AdminLayout>
 </template>
