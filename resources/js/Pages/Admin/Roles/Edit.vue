@@ -5,15 +5,20 @@ import TextInput from "@/Components/TextInput.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import Checkbox from "@/Components/Checkbox.vue";
 
+const props=defineProps({
+    role:{
+        type: Object,
+        required:true
+    }
+})
 const form =useForm({
-    name:""
+    name:props.role.name
 })
 </script>
 
 <template>
-    <Head title="Create New Role" />
+    <Head title="Update Role" />
 
     <AdminLayout>
         <div class="max-w-7xl mx-auto py-4">
@@ -26,8 +31,8 @@ const form =useForm({
 
         </div>
         <div class="mt-6 max-w-md mx-auto bg-slate-100 shadow-lg rounded-lg p-6">
-            <h1 class="text-2xl p-4">Create Role</h1>
-            <form @submit.prevent="form.post(route('roles.store'))">
+            <h1 class="text-2xl p-4">Update Role</h1>
+            <form @submit.prevent="form.put(route('roles.update',role.id))">
                 <div>
                     <InputLabel for="name" value="Name" />
 
@@ -49,7 +54,7 @@ const form =useForm({
 
 
                     <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                        Create
+                        Update
                     </PrimaryButton>
                 </div>
             </form>
