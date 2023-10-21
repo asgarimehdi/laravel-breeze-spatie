@@ -1,6 +1,6 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import { Head } from '@inertiajs/vue3';
+import {Head, Link} from '@inertiajs/vue3';
 import TableHeaderCell from "@/Components/TableHeaderCell.vue";
 import TableDataCell from "@/Components/TableDataCell.vue";
 import Table from "@/Components/Table.vue";
@@ -10,11 +10,17 @@ defineProps(['permissions'])
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="Permissions" />
 
     <AdminLayout>
         <div class="max-w-7xl mx-auto py-4">
-            <h1>permissions Index Page</h1>
+            <div class="flex justify-between">
+                <h1>Permissions Index Page</h1>
+                <Link :href="route('permissions.create')" class="px-3 py-2 text-white bg-indigo-500 hover:bg-indigo-700 rounded">
+                    New Permission
+                </Link>
+            </div>
+
         </div>
         <div class="mt-6">
             <Table>
