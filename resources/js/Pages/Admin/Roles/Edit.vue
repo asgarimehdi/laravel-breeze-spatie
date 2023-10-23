@@ -1,41 +1,56 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import { Head,Link,useForm } from '@inertiajs/vue3';
+import {Head, Link, useForm} from '@inertiajs/vue3';
 import TextInput from "@/Components/TextInput.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import VueMultiselect from 'vue-multiselect'
+import TableDataCell from "@/Components/TableDataCell.vue";
+import TableHeaderCell from "@/Components/TableHeaderCell.vue";
+import Table from "@/Components/Table.vue";
+import TableRow from "@/Components/TableRow.vue";
+import {onMounted, watch} from "vue";
 
-const props=defineProps({
-    role:{
+const props = defineProps({
+    role: {
         type: Object,
-        required:true
-    }
+        required: true
+    },
+    permissions:Array,
 })
-const form =useForm({
-    name:props.role.name
+const form = useForm({
+    name: props.role.name,
+    permissions:[]
 })
+onMounted(()=>{
+    form.permissions=props.role?.permissions;
+})
+watch(
+    ()=>props.role,
+    ()=>(form.permissions=props.role?.permissions)
+)
 </script>
 
 <template>
-    <Head title="Update Role" />
+    <Head title="Update Role"/>
 
     <AdminLayout>
         <div class="max-w-7xl mx-auto py-4">
             <div class="flex justify-between">
 
-                <Link :href="route('roles.index')" class="px-3 py-2 text-white bg-indigo-500 hover:bg-indigo-700 rounded">
+                <Link :href="route('roles.index')"
+                      class="px-3 py-2 text-white bg-indigo-500 hover:bg-indigo-700 rounded">
                     Back
                 </Link>
             </div>
 
         </div>
-        <div class="mt-6 max-w-md mx-auto bg-slate-100 shadow-lg rounded-lg p-6">
-            <h1 class="text-2xl p-4">Update Role</h1>
+        <div class="mt-6 max-w-6xl mx-auto bg-slate-100 shadow-lg rounded-lg p-6">
+            <h1 class="text-2xl font-semibold text-indigo-700">Update Role</h1>
             <form @submit.prevent="form.put(route('roles.update',role.id))">
-                <div>
-                    <InputLabel for="name" value="Name" />
-
+                <div class="mt-4">
+                    <InputLabel for="name" value="Name"/>
                     <TextInput
                         id="name"
                         type="text"
@@ -44,11 +59,20 @@ const form =useForm({
                         autofocus
                         autocomplete="username"
                     />
-
-                    <InputError class="mt-2" :message="form.errors.name" />
+                    <InputError class="mt-2" :message="form.errors.name"/>
                 </div>
-
-
+                <div class="mt-4">
+                    <InputLabel for="permissions" value="Permissions"/>
+                    <VueMultiselect
+                        v-model="form.permissions"
+                        :options="permissions"
+                        :multiple="true"
+                        :close-on-select="true"
+                        placeholder="چنتا انتخاب کن"
+                        label="name"
+                        track-by="id"
+                    />
+                </div>
 
                 <div class="flex items-center mt-4">
 
@@ -59,5 +83,31 @@ const form =useForm({
                 </div>
             </form>
         </div>
+        <div class="mt-6 max-w-6xl mx-auto bg-slate-100 shadow-lg rounded-lg p-6">
+            <h1 class="text-2xl font-semibold text-indigo-700">Permissions</h1>
+            <div class="bg-white">
+            <Table>
+                <template #header>
+                    <TableRow>
+                        <TableHeaderCell>Id</TableHeaderCell>
+                        <TableHeaderCell>Name</TableHeaderCell>
+                        <TableHeaderCell>Action</TableHeaderCell>
+                    </TableRow>
+                </template>
+                <template #default>
+                    <TableRow v-for="rolePermission in role.permissions" :key="rolePermission.id">
+                        <TableDataCell>{{rolePermission.id}}</TableDataCell>
+                        <TableDataCell>{{rolePermission.name}}</TableDataCell>
+                        <TableDataCell class="space-x-4">
+                            <Link :href="route('roles.permissions.destroy',[role.id,rolePermission.id])" method="DELETE" as="button" class="text-red-400 hover:text-red-600">
+                                Revoke
+                            </Link>
+                        </TableDataCell>
+                    </TableRow>
+                </template>
+            </Table>
+            </div>
+        </div>
     </AdminLayout>
 </template>
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>
