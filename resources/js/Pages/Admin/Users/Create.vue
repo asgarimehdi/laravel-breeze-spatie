@@ -5,12 +5,18 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import {Head, Link, useForm} from '@inertiajs/vue3';
-
+import VueMultiselect from 'vue-multiselect'
+const props=defineProps({
+    roles:Array,
+    permissions:Array,
+})
 const form = useForm({
     name: '',
     email: '',
     password: '',
     password_confirmation: '',
+    roles:[],
+    permissions:[]
 });
 
 const submit = () => {
@@ -34,7 +40,7 @@ const submit = () => {
         </div>
         <div class="max-w-md mx-auto mt-6 p-6 bg-slate-100">
             <form @submit.prevent="submit">
-                <div>
+                <div class="mt-4">
                     <InputLabel for="name" value="Name"/>
 
                     <TextInput
@@ -64,7 +70,30 @@ const submit = () => {
 
                     <InputError class="mt-2" :message="form.errors.email"/>
                 </div>
-
+                <div class="mt-4">
+                    <InputLabel for="roles" value="Roles"/>
+                    <VueMultiselect
+                        v-model="form.roles"
+                        :options="roles"
+                        :multiple="true"
+                        :close-on-select="true"
+                        placeholder="چنتا انتخاب کن"
+                        label="name"
+                        track-by="id"
+                    />
+                </div>
+                <div class="mt-4">
+                    <InputLabel for="permissions" value="Permissions"/>
+                    <VueMultiselect
+                        v-model="form.permissions"
+                        :options="permissions"
+                        :multiple="true"
+                        :close-on-select="true"
+                        placeholder="چنتا انتخاب کن"
+                        label="name"
+                        track-by="id"
+                    />
+                </div>
                 <div class="mt-4">
                     <InputLabel for="password" value="Password"/>
 
@@ -106,3 +135,4 @@ const submit = () => {
         </div>
     </AdminLayout>
 </template>
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>
